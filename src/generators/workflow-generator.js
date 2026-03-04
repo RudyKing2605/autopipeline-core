@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-export function generateControlPlaneWorkflow(targetPath) {
+export function generateWorkflow(targetPath) {
 
   const workflow = `
 name: Control Plane Listener

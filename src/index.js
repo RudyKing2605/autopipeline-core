@@ -1,8 +1,9 @@
 import { resolveStack } from "./core/stack-resolver.js";
-import { generateControlPlaneWorkflow } from "./generators/workflow-generator.js";
+import { geenrateWorkflow } from "./generators/workflow-generator.js";
 import { generateControlPlaneWorkflows } from "./generators/control-plane-generator.js";
 import { PhaseEngine } from "./core/phase-engine.js";
 import { ReworkEngine } from "./core/rework-engine.js";
+import { generateState } from "./generators/state-generator.js";
 import fs from "fs";
 import path from "path";
 
@@ -12,7 +13,13 @@ export function bootstrapProject(targetPath, config) {
 
   console.log("Stack resolved:", resolved);
 
-  generateControlPlaneWorkflow(targetPath);
+  //Generate pipeline state
+  generateState(targetPath, resolved);
+
+  //Generate base CI workflows
+  generateWorkflow(targetPath);
+
+  //Generate control plane approval workflows
   generateControlPlaneWorkflows(targetPath);
 
   const statePath = path.join(targetPath, "autopipeline-state.json");
