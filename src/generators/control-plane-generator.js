@@ -23,7 +23,7 @@ jobs:
 
       - name: Notify Control Plane
         run: |
-          curl -X POST ${{ secrets.CONTROL_PLANE_URL }}/github-callback \
+          curl -X POST "\${{ secrets.CONTROL_PLANE_URL }}/github-callback" \
           -H "Content-Type: application/json" \
           -d '{"message":"Planning completed. Awaiting development approval."}'
 `;
