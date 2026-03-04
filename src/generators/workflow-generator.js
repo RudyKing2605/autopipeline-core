@@ -3,29 +3,30 @@ import path from "path";
 
 export function generateWorkflow(targetPath) {
 
+  const workflowsDir = path.join(targetPath, ".github/workflows");
+
+  fs.mkdirSync(workflowsDir, { recursive: true });
+
   const workflow = `
-name: Control Plane Listener
+name: Autopipeline Planning
 
 on:
   repository_dispatch:
+    types: [approve_planning]
 
 jobs:
-  route-event:
+  planning:
     runs-on: ubuntu-latest
     steps:
-      - name: Print Event
-        run: |
-          echo "Event: \${{ github.event.action }}"
-          echo "Payload:"
-          echo '\${{ toJson(github.event.client_payload) }}'
+      - name: Planning Step
+        run: echo "Planning phase executed"
 `;
 
-  const workflowDir = path.join(targetPath, ".github/workflows");
-
-  fs.mkdirSync(workflowDir, { recursive: true });
   fs.writeFileSync(
-    path.join(workflowDir, "control-plane.yml"),
+    path.join(workflowsDir, "planning.yml"),
     workflow
   );
+
+  console.log("Planning workflow generated");
 
 }

@@ -1,43 +1,38 @@
 import { resolveStack } from "./core/stack-resolver.js";
-import { geenrateWorkflow } from "./generators/workflow-generator.js";
+import { generateWorkflow } from "./generators/workflow-generator.js";
 import { generateControlPlaneWorkflows } from "./generators/control-plane-generator.js";
 import { PhaseEngine } from "./core/phase-engine.js";
 import { ReworkEngine } from "./core/rework-engine.js";
 import { generateState } from "./generators/state-generator.js";
+import { generateProject } from "./generators/project-generator.js";
 import fs from "fs";
 import path from "path";
 
 export function bootstrapProject(targetPath, config) {
 
+  console.log("BOOTSTRAP STARTED");
+
   const resolved = resolveStack(config);
 
   console.log("Stack resolved:", resolved);
 
-  //Generate pipeline state
+  // Generate pipeline state
   generateState(targetPath, resolved);
+  console.log("State generated");
 
-  //Generate base CI workflows
+  // Generate base CI workflows
   generateWorkflow(targetPath);
+  console.log("Workflow generated");
 
-  //Generate control plane approval workflows
+  // Generate control plane workflows
   generateControlPlaneWorkflows(targetPath);
+  console.log("Control plane workflows generated");
 
-  const statePath = path.join(targetPath, "autopipeline-state.json");
+  //Generate Project scaffolding
+  generateProject(targetPath, resolved);
+  console.log("Project generated");
 
-  const initialState = {
-    ...resolved,
-    phase: "planning",
-    awaiting_approval: true,
-    rework_required: false,
-    history: []
-  };
-
-  fs.writeFileSync(
-    statePath,
-    JSON.stringify(initialState, null, 2)
-  );
-
-  console.log("Autopipeline initialized.");
+  console.log("Autopipeline bootstrap complete.");
 
 }
 

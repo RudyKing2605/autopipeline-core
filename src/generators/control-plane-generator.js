@@ -7,30 +7,26 @@ export function generateControlPlaneWorkflows(targetPath) {
 
   fs.mkdirSync(workflowsDir, { recursive: true });
 
-  const planningWorkflow = `
-name: Planning Phase
+  const workflow = `
+name: Control Plane
 
 on:
-  repository_dispatch:
-    types: [approve_planning]
+  workflow_dispatch:
 
 jobs:
-  planning:
+  notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Run Planning Agent
-        run: echo "Planning agent would execute here"
-
       - name: Notify Control Plane
         run: |
-          curl -X POST "\${{ secrets.CONTROL_PLANE_URL }}/github-callback" \
-          -H "Content-Type: application/json" \
-          -d '{"message":"Planning completed. Awaiting development approval."}'
+          curl -X POST "\${{ secrets.CONTROL_PLANE_URL }}/github-callback"
 `;
 
   fs.writeFileSync(
-    path.join(workflowsDir, "planning.yml"),
-    planningWorkflow
+    path.join(workflowsDir, "control-plane.yml"),
+    workflow
   );
+
+  console.log("Control plane workflow generated");
 
 }
