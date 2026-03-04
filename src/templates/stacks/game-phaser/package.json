@@ -1,0 +1,10 @@
+{
+  "name": "phaser-game",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "phaser": "^3.70.0"
+  }
+}
