@@ -5,6 +5,7 @@ import { PhaseEngine } from "./core/phase-engine.js";
 import { ReworkEngine } from "./core/rework-engine.js";
 import { generateState } from "./generators/state-generator.js";
 import { generateProject } from "./generators/project-generator.js";
+import { generatePlan } from "./core/planner-engine.js";
 import fs from "fs";
 import path from "path";
 
@@ -31,6 +32,10 @@ export function bootstrapProject(targetPath, config) {
   //Generate Project scaffolding
   generateProject(targetPath, resolved);
   console.log("Project generated");
+  
+  // Generate execution plan
+  generatePlan(targetPath, resolved);
+  console.log("Execution plan generated");
 
   console.log("Autopipeline bootstrap complete.");
 
